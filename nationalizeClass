@@ -1,6 +1,5 @@
 package studentMgmt;
 
-
 import java.net.URL;
 import java.util.ArrayList;
 import org.json.JSONArray;
@@ -10,7 +9,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-
 
 public class Nationalize {
 
@@ -33,7 +31,7 @@ public class Nationalize {
 			
 			String senderURL = "https://api.nationalize.io/?";
 			String nameSeparator = "&name=";
-			String apiKey = "&apikey=************************************";
+			String apiKey = "&apikey=717d0734a0c1e4df6624656de14a4c15";
 			
 		
 			if (cutoff < end) {
@@ -66,24 +64,14 @@ public class Nationalize {
 				//Creating HTTP Connection
 				URL url = new URL(senderURL);
 				connectionHTTP = (HttpURLConnection) url.openConnection();
-				connectionHTTP.setRequestMethod("GET");
-
+				connectionHTTP.setRequestMethod("GET");	
 				
-				int status = connectionHTTP.getResponseCode();
-
-				
-				if (status > 299) {
-					reader = new BufferedReader(new InputStreamReader(connectionHTTP.getErrorStream()));
-					while((line = reader.readLine()) != null) {	
-						responseContent.append(line);
-					} reader.close();
-				} else {
 						
-						reader = new BufferedReader(new InputStreamReader(connectionHTTP.getInputStream()));
-						while((line = reader.readLine()) != null) {	
+				reader = new BufferedReader(new InputStreamReader(connectionHTTP.getInputStream()));
+					while((line = reader.readLine()) != null) {	
 							responseContent.append(line);
 						} reader.close();
-					}
+				
 						
 				String responses = responseContent.toString();
 			
@@ -109,14 +97,9 @@ public class Nationalize {
 						//Assigning the country_id value to each student in the batch of 10
 						students.get(counter + i).setCountryID(country_id);
 						
-										
-						//System.out.println("My name is: " + name + " country_id: " + country_id);
 						
 					}
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} 
+				} catch (JSONException e) { e.printStackTrace();} 
 				
 		}
 	
