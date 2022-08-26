@@ -24,8 +24,8 @@ public class Sql {
 	 
 	 
 	 //SQLite command to return data from database without phone extensions
-	 public static ArrayList<Student> selectALL(Connection con) throws SQLException {
-		 
+	 public static ArrayList<Student> selectALL() throws SQLException {
+		 	Connection con = Sql.connect();
 			
 		 	String sql1 = "SELECT stu_id, first_name, last_name, email, CASE WHEN phone LIKE '%x%' THEN substr(phone, 1, (instr(phone, 'x') -1 )) ELSE phone END AS phone, dob  FROM students;";
 			Statement statement1 = con.createStatement();				 
@@ -48,7 +48,4 @@ public class Sql {
 				}	return list;
 	 }
 	 
-
-	
-
 }
