@@ -87,13 +87,11 @@ public class Nationalize {
 					for (int i = 0; i < tenStudents.length() ; i++)
 					{
 						JSONObject student = tenStudents.getJSONObject(i);
-						//String name =  student.getString("name");
 						JSONArray country = student.getJSONArray("country");
 						
 						//Assigning the JSon's object property to a String
 						String country_id = country.getJSONObject(0).getString("country_id");
 						
-
 						//Assigning the country_id value to each student in the batch of 10
 						students.get(counter + i).setCountryID(country_id);
 						
