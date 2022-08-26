@@ -1,4 +1,4 @@
-# SQLJavaAPIcsv
+# Nationalize Report
 A java program that gathers data from a database, calls the API nationalize.io, and creates a CSV with the relevant data.
 
 
