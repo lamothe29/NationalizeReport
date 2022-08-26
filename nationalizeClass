@@ -1,0 +1,139 @@
+package studentMgmt;
+
+import java.net.URI;
+import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.ArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.io.InputStreamReader;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import java.net.URL;
+import java.io.BufferedReader;
+
+
+public class Nationalize {
+
+	
+	private static HttpURLConnection connectionHTTP;
+	
+	public static void APICall(ArrayList<Student> students) throws IOException {
+
+		
+		
+		int end = students.size();
+		int batchsize = 10;
+		int remainder = end % batchsize;
+		
+		
+		for (int counter = 0; counter < end; counter += 10) {
+			
+			int cutoff = counter + remainder;
+		
+			
+			String senderURL = "https://api.nationalize.io/?";
+			String nameSeparator = "&name=";
+			String apiKey = "&apikey=717d0734a0c1e4df6624656de14a4c15";
+			
+		
+			if (cutoff < end) {
+				
+				for (int batchCounter = 0; batchCounter < 10; batchCounter++) {
+					
+					senderURL += nameSeparator + students.get(counter + batchCounter).firstName;
+					
+					if (batchCounter == 9) {
+						senderURL += apiKey;
+					}		
+				}
+			} else {
+				
+				for (int finalBatchCounter = 0; finalBatchCounter < remainder; finalBatchCounter++) {
+					
+					senderURL += nameSeparator + students.get(counter + finalBatchCounter).firstName;
+					
+					if (finalBatchCounter == (remainder - 1)) {
+						senderURL += apiKey;
+					}		
+			}}
+			
+			
+			//Preparing to Parse the Response from the Nationalize.IO API
+			BufferedReader reader;
+			String line;
+			StringBuffer responseContent = new StringBuffer();
+			
+				//Creating HTTP Connection
+				URL url = new URL(senderURL);
+				connectionHTTP = (HttpURLConnection) url.openConnection();
+				connectionHTTP.setRequestMethod("GET");
+
+				
+				int status = connectionHTTP.getResponseCode();
+
+				
+				if (status > 299) {
+					reader = new BufferedReader(new InputStreamReader(connectionHTTP.getErrorStream()));
+					while((line = reader.readLine()) != null) {	
+						responseContent.append(line);
+					} reader.close();
+				} else {
+						
+						reader = new BufferedReader(new InputStreamReader(connectionHTTP.getInputStream()));
+						while((line = reader.readLine()) != null) {	
+							responseContent.append(line);
+						} reader.close();
+					}
+						
+				String responses = responseContent.toString();
+			
+				
+				
+				
+				//Parsing JSon response from API
+				try {
+					
+					JSONArray tenStudents = new JSONArray(responses);
+					
+					
+					for (int i = 0; i < tenStudents.length() ; i++)
+					{
+						JSONObject student = tenStudents.getJSONObject(i);
+						//String name =  student.getString("name");
+						JSONArray country = student.getJSONArray("country");
+						
+						//Assigning the JSon's object property to a String
+						String country_id = country.getJSONObject(0).getString("country_id");
+						
+
+						//Assigning the country_id value to each student in the batch of 10
+						students.get(counter + i).setCountryID(country_id);
+						
+										
+						//System.out.println("My name is: " + name + " country_id: " + country_id);
+						
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
+				
+		}
+	
+		connectionHTTP.disconnect();
+		
+	}
+	
+}
