@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class Sql {
 	
 	
-	 //Method to connect to SQLite
+
 	 public static Connection connect() {
 		    Connection con = null; 
 		    try {
@@ -23,29 +23,35 @@ public class Sql {
 	 
 	 
 	 
-	 //SQLite command to return data from database without phone extensions
-	 public static ArrayList<Student> selectALL() throws SQLException {
+	 public static ResultSet gatherDataWithoutPhoneExtensions() throws SQLException {
 		 	Connection con = Sql.connect();
 			
 		 	String sql1 = "SELECT stu_id, first_name, last_name, email, CASE WHEN phone LIKE '%x%' THEN substr(phone, 1, (instr(phone, 'x') -1 )) ELSE phone END AS phone, dob  FROM students;";
 			Statement statement1 = con.createStatement();				 
 			ResultSet result = statement1.executeQuery(sql1);
-			ArrayList<Student> list = new ArrayList<Student>();
-			while(result.next()) {
-				
-				Student bob = new Student();
-				
-				bob.studentID = result.getString("stu_id");
-				bob.firstName = result.getString("first_name");
-				bob.lastName = result.getString("last_name");
-				bob.email = result.getString("email");
-				bob.phone = result.getString("phone");
-				bob.dob = result.getString("dob");	
-				
-				
-				list.add(bob);
-				
-				}	return list;
+			
+				return result;
 	 }
 	 
+
+	 
+	 
+	 
+	 public static ArrayList<Student> createStudentObjectList(ResultSet result) throws SQLException{
+		 	
+		 	ArrayList<Student> list = new ArrayList<Student>();
+			while(result.next()) {
+				
+				Student student = new Student();				
+				student.studentID = result.getString("stu_id");
+				student.firstName = result.getString("first_name");
+				student.lastName = result.getString("last_name");
+				student.email = result.getString("email");
+				student.phone = result.getString("phone");
+				student.dob = result.getString("dob");	
+					
+				list.add(student);}
+		 
+		 		return list;	 }
+
 }
