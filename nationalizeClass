@@ -16,7 +16,7 @@ public class Nationalize {
 	
 	private static HttpURLConnection connectionHTTP;
 	static String nameSeparator = "&name=";
-	static String apiKey = "&apikey=717d0734a0c1e4df6624656de14a4c15";
+	static String apiKey = "&apikey=*******************************";
 	
 	
 	public static ArrayList<ArrayList<Student>> createBatches(ArrayList<Student> students) throws IOException{
