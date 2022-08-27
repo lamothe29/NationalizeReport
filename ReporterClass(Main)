@@ -10,7 +10,22 @@ public class Reporter {
 	
 	public static void main(String[] args) throws JSONException, SQLException, IOException, InterruptedException{
 	
-		ArrayList<Student> students = Sql.selectALL();	 
-		Nationalize.APICall(students);
+		
+		ArrayList<Student> students = Sql.createStudentObjectList(Sql.gatherDataWithoutPhoneExtensions());	 
+		
+		
+		ArrayList<ArrayList<Student>> batchList = Nationalize.createBatches(students);
+		
+		ArrayList<ArrayList<String>> CountryIDs = new ArrayList<ArrayList<String>>();
+		
+		for (ArrayList<Student> batch : batchList) {
+			
+			String sender = Nationalize.createSenderURL(batch);
+			String response = Nationalize.getStringFromAPI(sender);
+			ArrayList<String> CountryIDBatch = Nationalize.parseResponse(response);
+			CountryIDs.add(CountryIDBatch);	
+			}
+		Nationalize.setCountryForEachBatch(batchList, CountryIDs);
 		SpreadSheetMaker.createSheet(students);
+		
 		}}
