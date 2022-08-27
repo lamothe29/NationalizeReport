@@ -9,32 +9,34 @@ import com.opencsv.CSVWriter;
 public class SpreadSheetMaker {
 	
 	
+	public static void fillInSheetWithData(ArrayList<Student> students, CSVWriter writer) throws IOException {
+				
+		for (Student student : students) {
+			String[] studentInfo = new String[7];	
+			studentInfo[0] = student.getStudentID();
+			studentInfo[1] = student.getFirstName();
+			studentInfo[2] = student.getLastName();
+			studentInfo[3] = student.getEmail();
+			studentInfo[4] = student.getPhone();
+			studentInfo[5] = student.getDob();
+			studentInfo[6] = student.getCountryID();
+			writer.writeNext(studentInfo);
+} 	}
+	
+	
+	
 	public static void createSheet(ArrayList<Student> students) throws IOException {
 		
-		String filePath = "./project6.csv";
-		File file = new File(filePath);
-		String[] columnTitle = { "stu_id", "first_name", "last_name", "email", "phone", "dob", "country_id"};
+		
+		File file = new File("./project10.csv");
 		FileWriter outputFile = new FileWriter(file);
 		CSVWriter writer = new CSVWriter(outputFile);
+		String[] columnTitle = { "stu_id", "first_name", "last_name", "email", "phone", "dob", "country_id"};
 		writer.writeNext(columnTitle);
-		
-		for (int j =0; j < students.size(); j++) {
-					
-					
-					String[] arr = new String[7];
-					
-					arr[0] = students.get(j).getStudentID();
-					arr[1] = students.get(j).getFirstName();
-					arr[2] = students.get(j).getLastName();
-					arr[3] = students.get(j).getEmail();
-					arr[4] = students.get(j).getPhone();
-					arr[5] = students.get(j).getDob();
-					arr[6] = students.get(j).getCountryID();
-					
-					writer.writeNext(arr);
-		}  
-		
-				writer.close();
+		SpreadSheetMaker.fillInSheetWithData(students, writer);
+		 
+		writer.close();
 		
 		
 }}
+
